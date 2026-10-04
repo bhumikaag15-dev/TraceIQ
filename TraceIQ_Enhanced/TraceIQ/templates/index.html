@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TraceIQ | Stack-powered diagnosis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">T</span> TraceIQ</a>
+    <span class="top-note">STACK-POWERED TROUBLESHOOTING SIMULATOR</span>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">DIAGNOSE · TRACE · BACKTRACK</div>
+      <h1>Find the fault.<br><em>Follow the stack.</em></h1>
+      <p>Work through a simulated technical fault and watch each diagnostic state get pushed onto a Last-In, First-Out stack. Each case now uses a deeper evidence chain and rule-based diagnosis.</p>
+    </section>
+
+    <section class="workspace">
+      <div class="panel scenario-panel">
+        <div class="panel-heading">
+          <div><span class="step-label">01 / SELECT A CASE</span><h2>What went wrong?</h2></div>
+          <span class="live-dot">SIMULATION</span>
+        </div>
+        <div class="scenario-list">
+          {% for s in scenarios %}
+          <button class="scenario-card {% if loop.first %}selected{% endif %}" data-id="{{ s.id }}">
+            <span class="case-icon">{{ {"wifi":"⌁","printer":"▣","internet_slow":"≈","laptop_slow":"◒","no_sound":"♫","app_not_opening":"◉","monitor":"▤","bluetooth":"⌁"}.get(s.id, "•") }}</span>
+            <span class="case-copy"><strong>{{ s.name }}</strong><small>{{ s.category }}</small></span>
+            <span class="arrow">↗</span>
+          </button>
+          {% endfor %}
+        </div>
+        <div id="scenario-description" class="description"></div>
+        <div class="panel-heading questions-heading">
+          <div><span class="step-label">02 / RUN THE CHECKS</span><h2>Diagnostic tests</h2></div>
+          <span id="progress" class="progress">0 / 0 COMPLETE</span>
+        </div>
+        <div id="questions"></div>
+        <button id="diagnose" class="primary" disabled>Run diagnosis <span>→</span></button>
+        <button id="reset" class="reset">Reset this case</button>
+      </div>
+
+      <aside class="panel stack-panel">
+        <div class="panel-heading">
+          <div><span class="step-label">LIVE DATA STRUCTURE</span><h2>Stack visualizer</h2></div>
+          <span class="lifo">LIFO</span>
+        </div>
+        <p class="muted">Last In, First Out — the most recently recorded diagnostic state sits at the top.</p>
+        <div class="stack-meter"><span id="stack-count">0</span><small>STACK SIZE</small></div>
+        <div class="stack-area">
+          <div class="stack-top-label"><span>TOP OF STACK</span><span>↓ PUSH</span></div>
+          <div id="stack-items" class="stack-items">
+            <div class="empty-stack">Your diagnostic states<br>will appear here.</div>
+          </div>
+          <div class="stack-base">STACK BASE</div>
+        </div>
+        <div class="operation-log">
+          <span class="step-label">OPERATION LOG</span>
+          <div id="log"><p>Waiting for your first test…</p></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="result" class="result panel hidden">
+      <div class="result-kicker">TRACE COMPLETE</div>
+      <div class="result-heading">
+        <div><h2 id="result-title"></h2><p id="result-explanation"></p></div>
+        <span id="result-confidence" class="confidence"></span>
+      </div>
+      <h3>Recommended next steps</h3>
+      <ul id="result-actions"></ul>
+      <h3>Evidence used</h3>
+      <ul id="result-evidence" class="evidence"></ul>
+      <div class="result-foot"><span id="result-meta"></span><button id="again" class="primary">Run another case ↗</button></div>
+    </section>
+
+    <footer>TRACEIQ <span>•</span> A data-structures mini project demonstrating stack operations in a practical simulation.</footer>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
